@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ExposureIQ: see what's exposed. Know what changed.</title>
+<meta name="description" content="ExposureIQ is an open-source tool that maps your external attack surface, shows what changed between scans, and turns findings into clear reports.">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="ExposureIQ">
+<meta property="og:description" content="See what's exposed. Know what changed.">
+<meta property="og:image" content="https://exposureiq-project.github.io/assets/branding/banner.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="assets/branding/icon-tight.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="bg" aria-hidden="true">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+  <canvas id="net"></canvas>
+</div>
+
+<header class="top"><div class="wrap">
+  <a class="logo" href="#top" aria-label="ExposureIQ home">
+    <img src="assets/branding/icon-tight.svg" alt="" height="24">
+    <span>Exposure<b>IQ</b></span>
+  </a>
+  <nav><a class="hide" href="#what">What it does</a><a class="hide" href="#how">How it works</a><a class="hide" href="#status">Status</a>
+    <a class="btn primary" href="https://github.com/ExposureIQ-Project/ExposureIQ">GitHub</a></nav>
+</div></header>
+
+<main id="top">
+<div class="hero"><div class="wrap">
+  <div>
+    <div class="pill"><i></i>Open source &middot; in early development</div>
+    <h1>See what's exposed.<br><span>Know what changed.</span></h1>
+    <p class="lead">ExposureIQ maps everything your organization shows to the internet, compares each scan with the last one, and turns the results into a clear report anyone can read.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/ExposureIQ-Project/ExposureIQ">View on GitHub</a>
+      <a class="btn ghost" href="#how">How it works</a>
+    </div>
+  </div>
+  <div class="card" role="img" aria-label="Illustrative example of a scan comparison showing one new subdomain, one changed port and one removed host">
+    <div class="bar"><span>Scan comparison</span><span>example.com</span></div>
+    <div class="row"><span class="tag t-new">New</span><code>staging.example.com</code><span class="tag t-high">High</span></div>
+    <div class="row"><span class="tag t-chg">Changed</span><code>api.example.com: port 8080 opened</code></div>
+    <div class="row"><span class="tag t-gone">Removed</span><code>old-shop.example.com</code></div>
+    <p class="note">Illustrative example of the planned output. Not real scan data.</p>
+  </div>
+</div></div>
+
+<section id="what"><div class="wrap">
+  <h2>Know your attack surface before someone else does</h2>
+  <p class="sub">Companies forget old test sites, open a service by mistake, and rarely notice when something changes. ExposureIQ is built to catch that.</p>
+  <div class="grid3">
+    <div class="feat"><div class="ic" style="background:rgba(22,184,166,.16)">&#128269;</div><h3>Discover</h3><p>Finds subdomains, IP addresses, open ports and the software running on them, using public records and a standard port scanner.</p></div>
+    <div class="feat"><div class="ic" style="background:rgba(124,131,253,.18)">&#128260;</div><h3>Compare</h3><p>Every scan is saved. ExposureIQ shows what is new, changed or gone since last time, because change is where risk appears.</p></div>
+    <div class="feat"><div class="ic" style="background:rgba(245,158,11,.16)">&#128196;</div><h3>Report</h3><p>Results become a professional report with severity levels, charts and recommendations, readable by engineers and managers alike.</p></div>
+  </div>
+  <div class="ai"><div style="font-size:26px" aria-hidden="true">&#10024;</div>
+    <p><strong>Optional AI helper.</strong> A local AI model can suggest what to fix first and draft report text. It only reads the results. It never scans, runs anything, or decides on its own, and a person always reviews its output. The tool works fully without it.</p></div>
+</div></section>
+
+<section id="how"><div class="wrap">
+  <h2>How it works</h2>
+  <p class="sub">A simple pipeline, one command at a time.</p>
+  <ol class="steps">
+    <li><h3>Scan</h3><p>Point it at a domain you own. It finds subdomains, addresses and open ports.</p></li>
+    <li><h3>Check</h3><p>It identifies the software in use and flags weak or risky settings, each with a severity.</p></li>
+    <li><h3>Compare</h3><p>It stores the scan and shows what changed since the previous one.</p></li>
+    <li><h3>Report</h3><p>It generates a report, with optional AI-drafted suggestions marked as drafts.</p></li>
+  </ol>
+</div></section>
+
+<section id="status"><div class="wrap">
+  <h2>Status: just getting started</h2>
+  <p class="sub">ExposureIQ is at the idea stage and no code has been released yet. We build it in the open, one area at a time, from October to November 2026.</p>
+  <div class="road">
+    <div class="stage"><b>Stage 1</b><span class="d">Discovery: subdomains, addresses, ports</span><em>Planned</em></div>
+    <div class="stage"><b>Stage 2</b><span class="d">Fingerprinting and security checks</span><em>Planned</em></div>
+    <div class="stage"><b>Stage 3</b><span class="d">Comparing scans and history</span><em>Planned</em></div>
+    <div class="stage"><b>Stage 4</b><span class="d">Reports (HTML and PDF)</span><em>Planned</em></div>
+    <div class="stage"><b>Stage 5</b><span class="d">Optional AI helper and one-command run</span><em>Planned</em></div>
+    <div class="stage"><b>Stage 6</b><span class="d">Testing, documentation, first release</span><em>Planned</em></div>
+  </div>
+</div></section>
+
+<section><div class="wrap"><div class="safe">
+  <h2>Responsible use</h2>
+  <p>ExposureIQ actively probes systems. Only scan assets you own or have written permission to test. Unauthorized scanning may be illegal where you live.</p>
+</div></div></section>
+
+<section class="final"><div class="wrap">
+  <h2>Follow the build</h2>
+  <p class="sub" style="margin-inline:auto">Star the repository to follow progress, or open an issue to tell us what you would want from a tool like this.</p>
+  <div class="cta"><a class="btn primary" href="https://github.com/ExposureIQ-Project/ExposureIQ">Go to GitHub</a></div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <span>&copy; 2026 ExposureIQ. Open source under the MIT License.</span>
+  <a href="https://github.com/ExposureIQ-Project/ExposureIQ">github.com/ExposureIQ-Project/ExposureIQ</a>
+</div></footer>
+<script src="js/main.js"></script>
+</body>
+</html>
