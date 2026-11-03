@@ -1,6 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="40 80 412 330" width="412" height="330">
-  <title>ExposureIQ icon (tight crop for inline use)</title>
-  <path fill="#16B8A6" fill-rule="evenodd" d="M200 80 L40 410 L360 410 Z M200 192 L118 352 L282 352 Z"/>
-  <polygon fill="#7C83FD" points="250,80 292,80 452,410 410,410"/>
-  <circle fill="#F4F7FA" cx="200" cy="300" r="30"/>
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 107 107"
+     role="img"
+     aria-labelledby="title">
+  <title id="title">ExposureIQ scan aperture icon</title>
+
+  <rect width="107" height="107" rx="18" fill="#0d141b"/>
+
+  <g fill="none"
+     stroke="#38e1c3"
+     stroke-linecap="square"
+     stroke-linejoin="miter">
+    <path d="M10 34V10h24
+             M73 10h24v24
+             M97 73v24H73
+             M34 97H10V73"
+          stroke-width="5"/>
+
+    <path d="M30 53.5h47"
+          stroke-width="3"/>
+  </g>
+
+  <circle cx="53.5" cy="53.5" r="9" fill="#38e1c3"/>
 </svg>

@@ -1,89 +1,142 @@
-/* ExposureIQ landing page: animated network background.
-   Drifting nodes and links, with an occasional amber pulse
-   to suggest "something changed". Static if reduced motion is on. */
-(function () {
-  var canvas = document.getElementById('net');
-  if (!canvas || !canvas.getContext) return;
-  var ctx = canvas.getContext('2d');
-  var motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  var dpr = Math.min(window.devicePixelRatio || 1, 2);
-  var w = 0, h = 0, nodes = [], pulses = [], raf = null, nextPulse = 0;
+/* ExposureIQ decorative network background. */
 
-  function make() {
+(function () {
+  const canvas = document.getElementById("net");
+  if (!canvas) return;
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  const reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  );
+
+  let width = 0;
+  let height = 0;
+  let dpr = 1;
+  let nodes = [];
+  let frame = null;
+  let resizeTimer = null;
+
+  function makeNode() {
     return {
-      x: Math.random() * w, y: Math.random() * h,
-      vx: (Math.random() - 0.5) * 0.28, vy: (Math.random() - 0.5) * 0.28,
-      r: 1.6 + Math.random() * 1.8,
-      c: Math.random() < 0.25 ? '124,131,253' : '22,184,166'
+      x: Math.random() * width,
+      y: Math.random() * height,
+      vx: (Math.random() - 0.5) * 0.2,
+      vy: (Math.random() - 0.5) * 0.2,
+      radius: 1.3 + Math.random() * 1.5,
+      color: Math.random() < 0.2
+        ? "146,151,255"
+        : "56,225,195"
     };
   }
 
   function resize() {
-    w = window.innerWidth; h = window.innerHeight;
-    canvas.width = w * dpr; canvas.height = h * dpr;
+    width = window.innerWidth;
+    height = window.innerHeight;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    var n = Math.max(22, Math.min(70, Math.round(w * h / 24000)));
-    while (nodes.length < n) nodes.push(make());
-    nodes.length = n;
-    if (motion.matches) draw(0);
+
+    const count = Math.max(
+      20,
+      Math.min(65, Math.round(width * height / 26000))
+    );
+
+    while (nodes.length < count) nodes.push(makeNode());
+    nodes.length = count;
+
+    for (const node of nodes) {
+      node.x = Math.min(node.x, width);
+      node.y = Math.min(node.y, height);
+    }
+
+    draw();
   }
 
-  function draw(t) {
-    ctx.clearRect(0, 0, w, h);
-    var link = w < 600 ? 110 : 150, i, j, a, b, dx, dy, d, al;
-    for (i = 0; i < nodes.length; i++) {
-      a = nodes[i];
-      for (j = i + 1; j < nodes.length; j++) {
-        b = nodes[j]; dx = a.x - b.x; dy = a.y - b.y; d = Math.sqrt(dx * dx + dy * dy);
-        if (d < link) {
-          al = (1 - d / link) * 0.28;
-          ctx.strokeStyle = 'rgba(22,184,166,' + al.toFixed(3) + ')';
-          ctx.lineWidth = 1;
-          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
-        }
+  function draw() {
+    ctx.clearRect(0, 0, width, height);
+
+    const maxDistance = width < 600 ? 105 : 145;
+
+    for (let i = 0; i < nodes.length; i++) {
+      const a = nodes[i];
+
+      for (let j = i + 1; j < nodes.length; j++) {
+        const b = nodes[j];
+        const distance = Math.hypot(a.x - b.x, a.y - b.y);
+
+        if (distance >= maxDistance) continue;
+
+        const opacity = (1 - distance / maxDistance) * 0.34;
+
+        ctx.strokeStyle = `rgba(56,225,195,${opacity})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.stroke();
       }
     }
-    for (i = 0; i < nodes.length; i++) {
-      a = nodes[i];
-      ctx.fillStyle = 'rgba(' + a.c + ',0.75)';
-      ctx.beginPath(); ctx.arc(a.x, a.y, a.r, 0, 6.2832); ctx.fill();
-    }
-    for (i = pulses.length - 1; i >= 0; i--) {
-      var p = pulses[i], k = (t - p.t0) / 2000;
-      if (k >= 1) { pulses.splice(i, 1); continue; }
-      ctx.strokeStyle = 'rgba(245,158,11,' + (0.7 * (1 - k)).toFixed(3) + ')';
-      ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.arc(p.n.x, p.n.y, 4 + k * 46, 0, 6.2832); ctx.stroke();
-      ctx.fillStyle = 'rgba(245,158,11,' + (0.95 * (1 - k)).toFixed(3) + ')';
-      ctx.beginPath(); ctx.arc(p.n.x, p.n.y, 3.2, 0, 6.2832); ctx.fill();
+
+    for (const node of nodes) {
+      ctx.fillStyle = `rgba(${node.color},.72)`;
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+      ctx.fill();
     }
   }
 
-  function tick(t) {
-    var i, n;
-    for (i = 0; i < nodes.length; i++) {
-      n = nodes[i]; n.x += n.vx; n.y += n.vy;
-      if (n.x < -10) n.x = w + 10; else if (n.x > w + 10) n.x = -10;
-      if (n.y < -10) n.y = h + 10; else if (n.y > h + 10) n.y = -10;
+  function tick() {
+    for (const node of nodes) {
+      node.x += node.vx;
+      node.y += node.vy;
+
+      if (node.x < -10) node.x = width + 10;
+      if (node.x > width + 10) node.x = -10;
+      if (node.y < -10) node.y = height + 10;
+      if (node.y > height + 10) node.y = -10;
     }
-    if (t > nextPulse) {
-      pulses.push({ n: nodes[Math.floor(Math.random() * nodes.length)], t0: t });
-      nextPulse = t + 3500 + Math.random() * 2500;
-    }
-    draw(t);
-    raf = requestAnimationFrame(tick);
+
+    draw();
+    frame = requestAnimationFrame(tick);
   }
 
   function start() {
-    if (raf || motion.matches || document.hidden) return;
-    raf = requestAnimationFrame(tick);
+    if (frame !== null || reducedMotion.matches || document.hidden) return;
+    frame = requestAnimationFrame(tick);
   }
-  function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
 
-  var timer;
-  window.addEventListener('resize', function () { clearTimeout(timer); timer = setTimeout(resize, 150); });
-  document.addEventListener('visibilitychange', function () { document.hidden ? stop() : start(); });
-  if (motion.addEventListener) motion.addEventListener('change', function () { stop(); resize(); start(); });
+  function stop() {
+    if (frame === null) return;
+    cancelAnimationFrame(frame);
+    frame = null;
+  }
 
-  resize(); start();
+  window.addEventListener("resize", function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(resize, 150);
+  });
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) stop();
+    else start();
+  });
+
+  function onMotionChange() {
+    stop();
+    draw();
+    start();
+  }
+
+  if (reducedMotion.addEventListener) {
+    reducedMotion.addEventListener("change", onMotionChange);
+  } else if (reducedMotion.addListener) {
+    reducedMotion.addListener(onMotionChange);
+  }
+
+  resize();
+  start();
 })();
